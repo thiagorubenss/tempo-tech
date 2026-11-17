@@ -1,927 +1,745 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEMPO TECH - Assistência Técnica</title>
-    <!-- Tailwind CSS -->
+    <title>TEMPO TECH - Gestão para Assistência Técnica</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Poppins & Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
-</head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
-
-    <!-- HEADER / NAVBAR -->
-    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-indigo-500/30">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg tracking-wide">TEMPO TECH</h1>
-                    <p class="text-xs text-slate-400">Gestão para Assistência Técnica</p>
-                </div>
-            </div>
-
-            <!-- MENU DE NAVEGAÇÃO (Abas) -->
-            <nav class="flex flex-wrap gap-1 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/60">
-                <button onclick="mudarAba('dashboard')" id="btn-dashboard" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-indigo-600 text-white shadow">
-                    <i class="fa-solid fa-chart-pie mr-2"></i>Dashboard
-                </button>
-                <button onclick="mudarAba('os')" id="btn-os" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700/50">
-                    <i class="fa-solid fa-clipboard-list mr-2"></i>Ordens de Serviço
-                </button>
-                <button onclick="mudarAba('estoque')" id="btn-estoque" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700/50">
-                    <i class="fa-solid fa-boxes-stacked mr-2"></i>Estoque
-                </button>
-                <button onclick="mudarAba('financeiro')" id="btn-financeiro" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700/50">
-                    <i class="fa-solid fa-wallet mr-2"></i>Financeiro
-                </button>
-            </nav>
-        </div>
-    </header>
-
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
-
-        <!-- ==================== ABA DASHBOARD ==================== -->
-        <section id="aba-dashboard" class="space-y-6">
-            <!-- Cards de Resumo -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">OS Abertas / Em Andamento</p>
-                        <h3 id="dash-os-abertas" class="text-3xl font-extrabold text-slate-800 mt-1">0</h3>
-                    </div>
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-screwdriver-wrench"></i>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Prontos p/ Retirada</p>
-                        <h3 id="dash-os-prontas" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h3>
-                    </div>
-                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Faturamento do Dia</p>
-                        <h3 id="dash-faturamento" class="text-2xl font-extrabold text-indigo-900 mt-1">R$ 0,00</h3>
-                    </div>
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Itens com Estoque Baixo</p>
-                        <h3 id="dash-estoque-baixo" class="text-3xl font-extrabold text-rose-600 mt-1">0</h3>
-                    </div>
-                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ações Rápidas & OS Recentes -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Ações Rápidas -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-lg mb-4 flex items-center">
-                            <i class="fa-solid fa-bolt text-amber-500 mr-2"></i>Ações Rápidas
-                        </h3>
-                        <div class="space-y-3">
-                            <button onclick="mudarAba('os'); abrirModalNovaOS();" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center justify-center">
-                                <i class="fa-solid fa-plus mr-2"></i>Nova Ordem de Serviço
-                            </button>
-                            <button onclick="mudarAba('estoque'); abrirModalNovaPeca();" class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition flex items-center justify-center">
-                                <i class="fa-solid fa-box-archive mr-2"></i>Cadastrar Peça/Produto
-                            </button>
-                            <button onclick="mudarAba('financeiro'); abrirModalNovaDespesa();" class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition flex items-center justify-center">
-                                <i class="fa-solid fa-money-bill-transfer mr-2"></i>Lançar Despesa / Caixa
-                            </button>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400 text-center">
-                        TEMPO TECH v1.2 • Todos os dados são salvos localmente.
-                    </div>
-                </div>
-
-                <!-- OS Recentes -->
-                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-slate-800 text-lg">Ordens de Serviço Recentes</h3>
-                        <button onclick="mudarAba('os')" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">Ver Todas</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="border-b border-slate-200 text-xs uppercase text-slate-400 font-semibold">
-                                    <th class="py-3 px-3">OS</th>
-                                    <th class="py-3 px-3">Cliente</th>
-                                    <th class="py-3 px-3">Aparelho</th>
-                                    <th class="py-3 px-3">Status</th>
-                                    <th class="py-3 px-3 text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-os-recentes">
-                                <!-- Injetado via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== ABA ORDENS DE SERVIÇO ==================== -->
-        <section id="aba-os" class="space-y-6 hidden">
-            <div class="flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex flex-wrap items-center gap-3 flex-1">
-                    <div class="relative flex-1 min-w-[220px]">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
-                        <input type="text" id="filtro-busca-os" onkeyup="renderizarTabelaOS()" placeholder="Buscar por cliente, modelo ou nº OS..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <select id="filtro-status-os" onchange="renderizarTabelaOS()" class="py-2.5 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500">
-                        <option value="todos">Todos os Status</option>
-                        <option value="Aberta">Aberta</option>
-                        <option value="Em Análise">Em Análise</option>
-                        <option value="Aguardando Peça">Aguardando Peça</option>
-                        <option value="Em Reparo">Em Reparo</option>
-                        <option value="Pronto">Pronto</option>
-                        <option value="Entregue">Entregue</option>
-                        <option value="Cancelado">Cancelado</option>
-                    </select>
-                </div>
-                <button onclick="abrirModalNovaOS()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center text-sm">
-                    <i class="fa-solid fa-plus mr-2"></i>Nova OS
-                </button>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-400 font-semibold">
-                                <th class="py-3.5 px-4">OS</th>
-                                <th class="py-3.5 px-4">Cliente / Contato</th>
-                                <th class="py-3.5 px-4">Aparelho</th>
-                                <th class="py-3.5 px-4">Defeito</th>
-                                <th class="py-3.5 px-4">Status</th>
-                                <th class="py-3.5 px-4 text-right">Valor</th>
-                                <th class="py-3.5 px-4 text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-os-completa">
-                            <!-- Injetado via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== ABA ESTOQUE ==================== -->
-        <section id="aba-estoque" class="space-y-6 hidden">
-            <div class="flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-                <div class="relative flex-1 min-w-[240px]">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
-                    <input type="text" id="filtro-busca-estoque" onkeyup="renderizarEstoque()" placeholder="Buscar peça por nome ou SKU..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <button onclick="abrirModalNovaPeca()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center text-sm">
-                    <i class="fa-solid fa-plus mr-2"></i>Nova Peça / Produto
-                </button>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-400 font-semibold">
-                                <th class="py-3.5 px-4">Item / SKU</th>
-                                <th class="py-3.5 px-4">Categoria</th>
-                                <th class="py-3.5 px-4">Preço Custo</th>
-                                <th class="py-3.5 px-4">Preço Venda</th>
-                                <th class="py-3.5 px-4">Qtd. Estoque</th>
-                                <th class="py-3.5 px-4 text-center">Situação</th>
-                                <th class="py-3.5 px-4 text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-estoque">
-                            <!-- Injetado via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== ABA FINANCEIRO ==================== -->
-        <section id="aba-financeiro" class="space-y-6 hidden">
-            <!-- Cards Caixa -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Entradas (Receitas)</p>
-                    <h3 id="fin-total-receitas" class="text-2xl font-extrabold text-emerald-600 mt-1">R$ 0,00</h3>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Saídas (Despesas)</p>
-                    <h3 id="fin-total-despesas" class="text-2xl font-extrabold text-rose-600 mt-1">R$ 0,00</h3>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Saldo em Caixa</p>
-                        <h3 id="fin-saldo-caixa" class="text-2xl font-extrabold text-indigo-900 mt-1">R$ 0,00</h3>
-                    </div>
-                    <button onclick="abrirModalNovaDespesa()" class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl font-semibold text-xs transition">
-                        + Lançar
-                    </button>
-                </div>
-            </div>
-
-            <!-- Tabela Extrato -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800 text-lg">Extrato de Movimentações</h3>
-                    <button onclick="abrirModalNovaDespesa()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-xs transition">
-                        Nova Despesa / Receita
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-400 font-semibold">
-                                <th class="py-3.5 px-4">Data</th>
-                                <th class="py-3.5 px-4">Tipo</th>
-                                <th class="py-3.5 px-4">Origem / Descrição</th>
-                                <th class="py-3.5 px-4">Forma Pagamento</th>
-                                <th class="py-3.5 px-4 text-right">Valor</th>
-                                <th class="py-3.5 px-4 text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-financeiro">
-                            <!-- Injetado via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ==================== MODAL: NOVA ORDEM DE SERVIÇO ==================== -->
-    <div id="modal-nova-os" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 my-8">
-            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-clipboard-question text-indigo-600 mr-2"></i>Nova Ordem de Serviço</h3>
-                <button onclick="fecharModalNovaOS()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-            <form id="form-nova-os" onsubmit="salvarOS(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nome do Cliente *</label>
-                        <input type="text" id="os-cliente" required placeholder="Ex: Carlos Silva" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Telefone / WhatsApp *</label>
-                        <input type="text" id="os-telefone" required placeholder="Ex: (11) 98888-7777" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Marca *</label>
-                        <input type="text" id="os-marca" required placeholder="Ex: Apple / Samsung" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Modelo *</label>
-                        <input type="text" id="os-modelo" required placeholder="Ex: iPhone 13" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">IMEI ou Serial</label>
-                        <input type="text" id="os-imei" placeholder="Opcional" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 font-mono">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Senha / Padrão de Tela</label>
-                        <input type="text" id="os-senha" placeholder="PIN, padrão ou 'não informado'" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Valor Peças (R$)</label>
-                        <input type="number" step="0.01" id="os-pecas" value="0.00" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 font-bold text-slate-700">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Valor Mão de Obra (R$)</label>
-                        <input type="number" step="0.01" id="os-mao" value="0.00" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 font-bold text-slate-700">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Forma de Pagamento (se pago)</label>
-                        <select id="os-forma-pgto" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500">
-                            <option value="Pix">Pix</option>
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Cartão Crédito">Cartão Crédito</option>
-                            <option value="Cartão Débito">Cartão Débito</option>
-                            <option value="A Receber">A Receber</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Defeito Relatado *</label>
-                    <textarea id="os-defeito" required rows="2" placeholder="Descreva o problema relatado pelo cliente..." class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Checklist de Entrada</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                        <label class="flex items-center space-x-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                            <input type="checkbox" id="chk-liga" class="rounded text-indigo-600"> <span>Aparelho Liga</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                            <input type="checkbox" id="chk-tela" class="rounded text-indigo-600"> <span>Tela Intacta</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                            <input type="checkbox" id="chk-biometria" class="rounded text-indigo-600"> <span>Biometria/Face</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                            <input type="checkbox" id="chk-chip" class="rounded text-indigo-600"> <span>Gaveta Chip OK</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="flex space-x-3 pt-4 border-t border-slate-100">
-                    <button type="button" onclick="fecharModalNovaOS()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-semibold hover:bg-slate-50 transition">Cancelar</button>
-                    <button type="submit" class="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/30">Salvar e Abrir OS</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ==================== MODAL: NOVA PEÇA / ESTOQUE ==================== -->
-    <div id="modal-nova-peca" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-box text-indigo-600 mr-2"></i>Cadastrar Peça / Produto</h3>
-                <button onclick="fecharModalNovaPeca()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-            <form id="form-nova-peca" onsubmit="salvarPeca(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nome da Peça / Produto *</label>
-                    <input type="text" id="peca-nome" required placeholder="Ex: Tela Frontal iPhone 11" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">SKU / Código</label>
-                        <input type="text" id="peca-sku" placeholder="Ex: TEL-IP11" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Categoria</label>
-                        <select id="peca-categoria" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500">
-                            <option value="Peça de Reposição">Peça de Reposição</option>
-                            <option value="Acessório">Acessório</option>
-                            <option value="Ferramenta">Ferramenta</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Custo (R$)</label>
-                        <input type="number" step="0.01" id="peca-custo" required value="0.00" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Venda (R$)</label>
-                        <input type="number" step="0.01" id="peca-venda" required value="0.00" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 font-bold text-emerald-600">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Qtd. Estoque</label>
-                        <input type="number" id="peca-qtd" required value="1" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 font-bold">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Estoque Mínimo (Alerta)</label>
-                    <input type="number" id="peca-min" required value="2" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <div class="flex space-x-3 pt-4 border-t border-slate-100">
-                    <button type="button" onclick="fecharModalNovaPeca()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-semibold hover:bg-slate-50 transition">Cancelar</button>
-                    <button type="submit" class="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/30">Salvar Peça</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ==================== MODAL: LANÇAR DESPESA / RECEITA ==================== -->
-    <div id="modal-nova-despesa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-wallet text-indigo-600 mr-2"></i>Lançamento no Caixa</h3>
-                <button onclick="fecharModalNovaDespesa()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-            <form id="form-novo-lancamento" onsubmit="salvarLancamento(event)" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tipo</label>
-                        <select id="fin-tipo" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none">
-                            <option value="receita">Receita (Entrada)</option>
-                            <option value="despesa">Despesa (Saída)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Valor (R$)</label>
-                        <input type="number" step="0.01" id="fin-valor" required placeholder="0.00" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Origem / Descrição *</label>
-                    <input type="text" id="fin-origem" required placeholder="Ex: Compra de Ferramentas / Aluguel / Venda Balcão" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Forma de Pagamento</label>
-                    <select id="fin-forma" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none">
-                        <option value="Pix">Pix</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                        <option value="Cartão Crédito">Cartão Crédito</option>
-                        <option value="Cartão Débito">Cartão Débito</option>
-                        <option value="Transferência">Transferência</option>
-                    </select>
-                </div>
-                <div class="flex space-x-3 pt-4 border-t border-slate-100">
-                    <button type="button" onclick="fecharModalNovaDespesa()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-semibold hover:bg-slate-50 transition">Cancelar</button>
-                    <button type="submit" class="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/30">Adicionar Lançamento</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ==================== MODAL: SIMULADOR WHATSAPP ==================== -->
-    <div id="modal-whatsapp" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-emerald-600 text-lg flex items-center"><i class="fa-brands fa-whatsapp text-xl mr-2"></i>Enviar Atualização via WhatsApp</h3>
-                <button onclick="fecharModalWhatsapp()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Para o Cliente</label>
-                    <input type="text" id="zap-cliente" readonly class="w-full py-2 px-3 bg-slate-100 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Mensagem Formatada (Automática)</label>
-                    <textarea id="zap-texto" rows="5" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none font-mono text-slate-700"></textarea>
-                </div>
-                <div class="flex space-x-3 pt-2">
-                    <button type="button" onclick="fecharModalWhatsapp()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-semibold hover:bg-slate-50 transition">Fechar</button>
-                    <a id="btn-enviar-zap" href="#" target="_blank" class="flex-1 px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition shadow-lg shadow-emerald-600/30 text-center flex items-center justify-center">
-                        <i class="fa-brands fa-whatsapp mr-2 text-lg"></i>Abrir no WhatsApp
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== MODAL DE CONFIRMAÇÃO EXCLUSÃO ==================== -->
-    <div id="modal-confirmacao" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-in fade-in zoom-in duration-200">
-            <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">Confirmação</h3>
-            <p id="texto-confirmacao" class="text-sm text-slate-600 mb-6">Deseja realmente excluir este registro?</p>
-            <div class="flex space-x-3">
-                <button type="button" onclick="window.fecharModalConfirmacao()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-semibold hover:bg-slate-50 transition">Cancelar</button>
-                <button type="button" onclick="window.executarConfirmacao()" class="flex-1 px-4 py-2.5 bg-rose-600 text-white rounded-xl font-semibold hover:bg-rose-700 transition shadow-lg shadow-rose-600/30">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- SCRIPT DA APLICAÇÃO -->
     <script>
-        // ==================== ESTADO GLOBAL DA APLICAÇÃO ====================
-        let estadoApp = {
-            os: [
-                { id: 1, numeroOS: 101, cliente: "Mariana Souza", telefone: "11988887777", marca: "Apple", modelo: "iPhone 11", imei: "35489209182371", senha: "1234", defeito: "Tela quebrada após queda", pecas: 250.00, mao: 120.00, status: "Em Reparo", data: "08/11/2026" },
-                { id: 2, numeroOS: 102, cliente: "João Pedro", telefone: "11977776666", marca: "Samsung", modelo: "Galaxy A54", imei: "86329104829102", senha: "padrão L", defeito: "Não liga e não carrega", pecas: 180.00, mao: 90.00, status: "Pronto", data: "08/11/2026" }
-            ],
-            estoque: [
-                { id: 1, sku: "TEL-IP11", nome: "Tela Frontal iPhone 11 In-Cell", categoria: "Peça de Reposição", custo: 180.00, venda: 320.00, qtd: 3, min: 2 },
-                { id: 2, sku: "BAT-A54", nome: "Bateria Samsung Galaxy A54 Original", categoria: "Peça de Reposição", custo: 75.00, venda: 160.00, qtd: 1, min: 2 },
-                { id: 3, sku: "PEL-CER", nome: "Película de Cerâmica 3D Universal", categoria: "Acessório", custo: 5.00, venda: 25.00, qtd: 15, min: 5 }
-            ],
-            financeiro: [
-                { id: 1, tipo: "receita", origem: "OS #102 - João Pedro", valor: 270.00, forma: "Pix", data: "08/11/2026" },
-                { id: 2, tipo: "despesa", origem: "Compra de Peças (Fornecedor SP)", valor: 255.00, forma: "Transferência", data: "08/11/2026" }
-            ],
-            proximoOS: 103
-        };
-
-        // Carregar do localStorage se existir
-        function carregarDadosStorage() {
-            const salvo = localStorage.getItem('tempo_tech_db');
-            if (salvo) {
-                try {
-                    estadoApp = JSON.parse(salvo);
-                } catch (e) {
-                    console.error("Erro ao carregar localStorage", e);
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#0284c7',
+                            600: '#026aa2',
+                            700: '#035380',
+                            900: '#0a192f',
+                        }
+                    }
                 }
             }
         }
+    </script>
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 font-sans antialiased flex flex-col">
 
-        function salvarDadosStorage() {
-            localStorage.setItem('tempo_tech_db', JSON.stringify(estadoApp));
+    <!-- TELA DE LOGIN -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-8">
+            <div class="text-center mb-8">
+                <!-- Logotipo Oficial Tempo Tech -->
+                <h1 class="text-2xl font-bold tracking-tight text-white">TEMPO TECH</h1>
+                <p class="text-sm text-slate-400 mt-1">Gestão Inteligente para Assistência Técnica</p>
+            </div>
+
+            <form id="loginForm" onsubmit="realizarLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Usuário</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" id="loginUsuario" required class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-brand-500" placeholder="Ex: admin ou funcionario">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Senha</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="loginSenha" required class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-brand-500" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div id="loginErro" class="hidden text-xs text-rose-400 text-center font-medium bg-rose-950/40 border border-rose-900/50 py-2 rounded-lg">
+                    Usuário ou senha incorretos.
+                </div>
+
+                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-medium py-2.5 rounded-xl transition duration-200 shadow-lg shadow-brand-500/20">
+                    Entrar no Sistema
+                </button>
+            </form>
+            <div class="mt-6 text-center text-xs text-slate-500">
+                Acesso Padrão: <span class="text-slate-400 font-mono">admin / 123</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- APLICATIVO PRINCIPAL -->
+    <div id="appContainer" class="hidden h-full flex flex-col">
+        <!-- HEADER -->
+        <header class="bg-slate-900 border-b border-slate-800 h-16 flex items-center justify-between px-6 shrink-0">
+            <div class="flex items-center space-x-3">
+                <div>
+                    <span class="font-bold text-white tracking-wide text-lg">TEMPO TECH</span>
+                    <span class="text-xs text-slate-400 ml-2 hidden sm:inline">| Cloud Firebase Ativo</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex space-x-1">
+                <button onclick="mudarAba('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-chart-pie mr-2"></i>Dashboard</button>
+                <button onclick="mudarAba('os')" id="nav-os" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-screwdriver-wrench mr-2"></i>Ordens de Serviço</button>
+                <button onclick="mudarAba('estoque')" id="nav-estoque" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-boxes-stacked mr-2"></i>Estoque</button>
+                <button onclick="mudarAba('financeiro')" id="nav-financeiro" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-wallet mr-2"></i>Financeiro</button>
+                <button onclick="mudarAba('usuarios')" id="nav-usuarios" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-users mr-2"></i>Usuários</button>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <div class="text-right hidden sm:block">
+                    <div id="userDisplayName" class="text-sm font-medium text-white">Admin</div>
+                    <div id="userDisplayRole" class="text-xs text-brand-400">Administrador</div>
+                </div>
+                <button onclick="realizarLogout()" title="Sair" class="bg-slate-800 hover:bg-rose-950/50 hover:text-rose-400 text-slate-300 w-9 h-9 rounded-xl flex items-center justify-center transition">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="flex-1 overflow-y-auto p-6 bg-slate-950">
+            <!-- DASHBOARD -->
+            <section id="tab-dashboard" class="space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase text-slate-400">OS Abertas</span>
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        </div>
+                        <div id="stat-os-abertas" class="text-2xl font-bold text-white mt-3">0</div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase text-slate-400">OS Concluídas</span>
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-circle-check"></i></div>
+                        </div>
+                        <div id="stat-os-concluidas" class="text-2xl font-bold text-white mt-3">0</div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase text-slate-400">Peças em Estoque</span>
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        </div>
+                        <div id="stat-estoque-total" class="text-2xl font-bold text-white mt-3">0</div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase text-slate-400">Caixa do Mês</span>
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-wallet"></i></div>
+                        </div>
+                        <div id="stat-caixa-mes" class="text-2xl font-bold text-white mt-3">R$ 0,00</div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                    <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-bolt text-brand-500 mr-2"></i>Ações Rápidas</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <button onclick="mudarAba('os'); abrirModalOS()" class="bg-slate-950 hover:bg-slate-800/80 border border-slate-800 p-4 rounded-xl text-left transition flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-lg bg-brand-500/10 text-brand-500 flex items-center justify-center text-lg"><i class="fa-solid fa-plus"></i></div>
+                            <div>
+                                <div class="font-semibold text-white">Nova Ordem de Serviço</div>
+                                <div class="text-xs text-slate-400 mt-0.5">Cadastrar aparelho</div>
+                            </div>
+                        </button>
+                        <button onclick="mudarAba('estoque'); abrirModalEstoque()" class="bg-slate-950 hover:bg-slate-800/80 border border-slate-800 p-4 rounded-xl text-left transition flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-lg"><i class="fa-solid fa-box-archive"></i></div>
+                            <div>
+                                <div class="font-semibold text-white">Cadastrar Peça</div>
+                                <div class="text-xs text-slate-400 mt-0.5">Adicionar ao estoque</div>
+                            </div>
+                        </button>
+                        <button onclick="mudarAba('financeiro'); abrirModalFinanceiro()" class="bg-slate-950 hover:bg-slate-800/80 border border-slate-800 p-4 rounded-xl text-left transition flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg"><i class="fa-solid fa-cash-register"></i></div>
+                            <div>
+                                <div class="font-semibold text-white">Lançar Caixa</div>
+                                <div class="text-xs text-slate-400 mt-0.5">Registrar entrada/saída</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ORDENS DE SERVIÇO -->
+            <section id="tab-os" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Ordens de Serviço</h2>
+                        <p class="text-xs text-slate-400">Controle completo de reparos</p>
+                    </div>
+                    <button onclick="abrirModalOS()" class="bg-brand-500 hover:bg-brand-600 text-white font-medium px-4 py-2.5 rounded-xl transition text-sm shadow-lg shadow-brand-500/20 flex items-center justify-center">
+                        <i class="fa-solid fa-plus mr-2"></i> Nova OS
+                    </button>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="p-4 border-b border-slate-800 flex items-center justify-between gap-4">
+                        <input type="text" id="filtroOS" oninput="renderizarOS()" placeholder="Buscar cliente, aparelho..." class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500 w-full sm:w-80">
+                        <select id="statusFiltroOS" onchange="renderizarOS()" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                            <option value="">Todos os Status</option>
+                            <option value="Aberta">Aberta</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Entregue">Entregue</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-950/50 text-slate-400 uppercase text-xs border-b border-slate-800">
+                                <tr>
+                                    <th class="p-4">ID</th>
+                                    <th class="p-4">Cliente</th>
+                                    <th class="p-4">Aparelho</th>
+                                    <th class="p-4">Defeito</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4">Valor</th>
+                                    <th class="p-4 text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaOS" class="divide-y divide-slate-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ESTOQUE -->
+            <section id="tab-estoque" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Controle de Estoque</h2>
+                        <p class="text-xs text-slate-400">Gerenciamento de peças e acessórios</p>
+                    </div>
+                    <button onclick="abrirModalEstoque()" class="bg-brand-500 hover:bg-brand-600 text-white font-medium px-4 py-2.5 rounded-xl transition text-sm shadow-lg shadow-brand-500/20 flex items-center justify-center">
+                        <i class="fa-solid fa-plus mr-2"></i> Nova Peça
+                    </button>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="p-4 border-b border-slate-800">
+                        <input type="text" id="filtroEstoque" oninput="renderizarEstoque()" placeholder="Buscar peça..." class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500 w-full sm:w-80">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-950/50 text-slate-400 uppercase text-xs border-b border-slate-800">
+                                <tr>
+                                    <th class="p-4">Peça / Produto</th>
+                                    <th class="p-4">Categoria</th>
+                                    <th class="p-4">Qtd.</th>
+                                    <th class="p-4">Preço Venda</th>
+                                    <th class="p-4 text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaEstoque" class="divide-y divide-slate-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FINANCEIRO -->
+            <section id="tab-financeiro" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Fluxo de Caixa</h2>
+                        <p class="text-xs text-slate-400">Controle de entradas e saídas</p>
+                    </div>
+                    <button onclick="abrirModalFinanceiro()" class="bg-brand-500 hover:bg-brand-600 text-white font-medium px-4 py-2.5 rounded-xl transition text-sm shadow-lg shadow-brand-500/20 flex items-center justify-center">
+                        <i class="fa-solid fa-plus mr-2"></i> Novo Lançamento
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="text-xs font-semibold uppercase text-slate-400">Entradas</div>
+                        <div id="fin-entradas" class="text-2xl font-bold text-emerald-400 mt-2">R$ 0,00</div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="text-xs font-semibold uppercase text-slate-400">Saídas</div>
+                        <div id="fin-saidas" class="text-2xl font-bold text-rose-400 mt-2">R$ 0,00</div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+                        <div class="text-xs font-semibold uppercase text-slate-400">Saldo em Caixa</div>
+                        <div id="fin-saldo" class="text-2xl font-bold text-white mt-2">R$ 0,00</div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-950/50 text-slate-400 uppercase text-xs border-b border-slate-800">
+                                <tr>
+                                    <th class="p-4">Data</th>
+                                    <th class="p-4">Descrição</th>
+                                    <th class="p-4">Tipo</th>
+                                    <th class="p-4">Valor</th>
+                                    <th class="p-4 text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaFinanceiro" class="divide-y divide-slate-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- USUÁRIOS -->
+            <section id="tab-usuarios" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Gestão de Usuários</h2>
+                        <p class="text-xs text-slate-400">Controle de acessos</p>
+                    </div>
+                    <button onclick="abrirModalUsuario()" class="bg-brand-500 hover:bg-brand-600 text-white font-medium px-4 py-2.5 rounded-xl transition text-sm shadow-lg shadow-brand-500/20 flex items-center justify-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i> Novo Usuário
+                    </button>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-950/50 text-slate-400 uppercase text-xs border-b border-slate-800">
+                                <tr>
+                                    <th class="p-4">Nome</th>
+                                    <th class="p-4">Usuário</th>
+                                    <th class="p-4">Cargo</th>
+                                    <th class="p-4 text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaUsuarios" class="divide-y divide-slate-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAIS -->
+    <div id="modalOS" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+            <h3 id="modalOSTitulo" class="text-lg font-bold text-white mb-4">Nova Ordem de Serviço</h3>
+            <form id="formOS" onsubmit="salvarOS(event)" class="space-y-4">
+                <input type="hidden" id="osId">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Cliente</label><input type="text" id="osCliente" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Telefone</label><input type="text" id="osTelefone" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Aparelho</label><input type="text" id="osAparelho" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Valor (R$)</label><input type="number" step="0.01" id="osValor" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                </div>
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Defeito</label><textarea id="osDefeito" rows="3" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></textarea></div>
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Status</label><select id="osStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"><option value="Aberta">Aberta</option><option value="Em Andamento">Em Andamento</option><option value="Concluído">Concluído</option><option value="Entregue">Entregue</option></select></div>
+                <div class="flex justify-end space-x-3 pt-4 border-t border-slate-800"><button type="button" onclick="fecharModal('modalOS')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancelar</button><button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2 rounded-xl text-sm font-medium">Salvar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalEstoque" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6">
+            <h3 class="text-lg font-bold text-white mb-4">Gerenciar Peça</h3>
+            <form id="formEstoque" onsubmit="salvarEstoque(event)" class="space-y-4">
+                <input type="hidden" id="estoqueId">
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Nome</label><input type="text" id="estNome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Categoria</label><input type="text" id="estCategoria" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Qtd</label><input type="number" id="estQtd" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Preço (R$)</label><input type="number" step="0.01" id="estPreco" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t border-slate-800"><button type="button" onclick="fecharModal('modalEstoque')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancelar</button><button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2 rounded-xl text-sm font-medium">Salvar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalFinanceiro" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6">
+            <h3 class="text-lg font-bold text-white mb-4">Novo Lançamento</h3>
+            <form id="formFinanceiro" onsubmit="salvarFinanceiro(event)" class="space-y-4">
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Descrição</label><input type="text" id="finDescricao" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Tipo</label><select id="finTipo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"><option value="Entrada">Entrada</option><option value="Saida">Saída</option></select></div>
+                    <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Valor (R$)</label><input type="number" step="0.01" id="finValor" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                </div>
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Data</label><input type="date" id="finData" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                <div class="flex justify-end space-x-3 pt-4 border-t border-slate-800"><button type="button" onclick="fecharModal('modalFinanceiro')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancelar</button><button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2 rounded-xl text-sm font-medium">Salvar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalUsuario" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6">
+            <h3 class="text-lg font-bold text-white mb-4">Novo Usuário</h3>
+            <form id="formUsuario" onsubmit="salvarUsuario(event)" class="space-y-4">
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Nome</label><input type="text" id="usrNome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Login</label><input type="text" id="usrLogin" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Senha</label><input type="password" id="usrSenha" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"></div>
+                <div><label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Cargo</label><select id="usrCargo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brand-500"><option value="Funcionario">Funcionário</option><option value="Administrador">Administrador</option></select></div>
+                <div class="flex justify-end space-x-3 pt-4 border-t border-slate-800"><button type="button" onclick="fecharModal('modalUsuario')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancelar</button><button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2 rounded-xl text-sm font-medium">Salvar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE LÓGICA E FIREBASE -->
+    <script>
+        const firebaseConfig = { projectId: "tempotech" };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
+        const db = firebase.firestore();
 
-        // Inicialização ao carregar a página
+        let usuarioLogado = null;
+        let dbOS = [];
+        let dbEstoque = [];
+        let dbFinanceiro = [];
+        let dbUsuarios = [
+            { id: 'admin1', nome: 'Administrador', login: 'admin', senha: '123', cargo: 'Administrador' },
+            { id: 'func1', nome: 'Funcionário', login: 'funcionario', senha: '123', cargo: 'Funcionario' }
+        ];
+
         window.addEventListener('DOMContentLoaded', () => {
-            carregarDadosStorage();
-            atualizarTudo();
+            const userSalvo = localStorage.getItem('tempo_tech_user');
+            if (userSalvo) {
+                try {
+                    usuarioLogado = JSON.parse(userSalvo);
+                    iniciarAplicacaoSistema();
+                } catch(e) {
+                    localStorage.removeItem('tempo_tech_user');
+                }
+            }
         });
 
-        function atualizarTudo() {
-            salvarDadosStorage();
+        function realizarLogin(e) {
+            e.preventDefault();
+            const usuarioInput = document.getElementById('loginUsuario').value.trim();
+            const senhaInput = document.getElementById('loginSenha').value.trim();
+
+            const encontrado = dbUsuarios.find(u => u.login === usuarioInput && u.senha === senhaInput);
+            if (encontrado) {
+                usuarioLogado = encontrado;
+                localStorage.setItem('tempo_tech_user', JSON.stringify(usuarioLogado));
+                document.getElementById('loginErro').classList.add('hidden');
+                iniciarAplicacaoSistema();
+            } else {
+                document.getElementById('loginErro').classList.remove('hidden');
+            }
+        }
+
+        function realizarLogout() {
+            localStorage.removeItem('tempo_tech_user');
+            usuarioLogado = null;
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        function iniciarAplicacaoSistema() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+
+            document.getElementById('userDisplayName').innerText = usuarioLogado.nome;
+            document.getElementById('userDisplayRole').innerText = usuarioLogado.cargo;
+
+            if (usuarioLogado.cargo !== 'Administrador') {
+                const navFin = document.getElementById('nav-financeiro');
+                const navUsr = document.getElementById('nav-usuarios');
+                if(navFin) navFin.style.display = 'none';
+                if(navUsr) navUsr.style.display = 'none';
+            }
+
+            conectarFirebaseRealtime();
+            mudarAba('dashboard');
+        }
+
+        function conectarFirebaseRealtime() {
+            db.collection('os').onSnapshot(snapshot => {
+                dbOS = [];
+                snapshot.forEach(doc => dbOS.push({ id: doc.id, ...doc.data() }));
+                atualizarTudoNaTela();
+            }, err => console.log("Modo offline ou sem dados em OS"));
+
+            db.collection('estoque').onSnapshot(snapshot => {
+                dbEstoque = [];
+                snapshot.forEach(doc => dbEstoque.push({ id: doc.id, ...doc.data() }));
+                atualizarTudoNaTela();
+            }, err => console.log("Modo offline ou sem dados em Estoque"));
+
+            db.collection('financeiro').onSnapshot(snapshot => {
+                dbFinanceiro = [];
+                snapshot.forEach(doc => dbFinanceiro.push({ id: doc.id, ...doc.data() }));
+                atualizarTudoNaTela();
+            }, err => console.log("Modo offline ou sem dados em Financeiro"));
+
+            db.collection('usuarios').onSnapshot(snapshot => {
+                if (!snapshot.empty) {
+                    dbUsuarios = [];
+                    snapshot.forEach(doc => dbUsuarios.push({ id: doc.id, ...doc.data() }));
+                }
+                renderizarUsuarios();
+            }, err => console.log("Usando usuários padrão"));
+        }
+
+        function atualizarTudoNaTela() {
             renderizarDashboard();
-            renderizarTabelaOS();
+            renderizarOS();
             renderizarEstoque();
             renderizarFinanceiro();
         }
 
-        // ==================== NAVEGAÇÃO ENTRE ABAS ====================
-        function mudarAba(aba) {
-            ['dashboard', 'os', 'estoque', 'financeiro'].forEach(a => {
-                document.getElementById(`aba-${a}`).classList.add('hidden');
-                document.getElementById(`btn-${a}`).className = "px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-300 hover:text-white hover:bg-slate-700/50";
+        function mudarAba(abaId) {
+            if ((abaId === 'financeiro' || abaId === 'usuarios') && usuarioLogado.cargo !== 'Administrador') {
+                alert('Acesso restrito a Administradores.');
+                return;
+            }
+
+            ['dashboard', 'os', 'estoque', 'financeiro', 'usuarios'].forEach(id => {
+                const tab = document.getElementById(`tab-${id}`);
+                const btn = document.getElementById(`nav-${id}`);
+                if(tab) tab.classList.add('hidden');
+                if(btn) btn.classList.remove('bg-slate-800', 'text-white');
             });
-            document.getElementById(`aba-${aba}`).classList.remove('hidden');
-            document.getElementById(`btn-${aba}`).className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-indigo-600 text-white shadow";
+
+            const ativaTab = document.getElementById(`tab-${abaId}`);
+            const ativoBtn = document.getElementById(`nav-${abaId}`);
+            if(ativaTab) ativaTab.classList.remove('hidden');
+            if(ativoBtn) ativoBtn.classList.add('bg-slate-800', 'text-white');
         }
 
-        // ==================== DASHBOARD LOGIC ====================
         function renderizarDashboard() {
-            const osAbertas = estadoApp.os.filter(o => o.status !== 'Entregue' && o.status !== 'Cancelado').length;
-            const osProntas = estadoApp.os.filter(o => o.status === 'Pronto').length;
-            const estoqueBaixo = estadoApp.estoque.filter(p => p.qtd <= p.min).length;
+            const abertas = dbOS.filter(o => o.status !== 'Entregue' && o.status !== 'Concluído').length;
+            const concluidas = dbOS.filter(o => o.status === 'Concluído' || o.status === 'Entregue').length;
+            const totalEstoque = dbEstoque.reduce((acc, item) => acc + Number(item.qtd || 0), 0);
+            const entradas = dbFinanceiro.filter(f => f.tipo === 'Entrada').reduce((acc, f) => acc + Number(f.valor || 0), 0);
+            const saidas = dbFinanceiro.filter(f => f.tipo === 'Saida').reduce((acc, f) => acc + Number(f.valor || 0), 0);
 
-            // Faturamento do dia
-            let faturamento = 0;
-            const hojeStr = new Date().toLocaleDateString('pt-BR');
-            estadoApp.financeiro.forEach(f => {
-                if (f.tipo === 'receita') {
-                    faturamento += f.valor;
+            document.getElementById('stat-os-abertas').innerText = abertas;
+            document.getElementById('stat-os-concluidas').innerText = concluidas;
+            document.getElementById('stat-estoque-total').innerText = totalEstoque;
+            document.getElementById('stat-caixa-mes').innerText = `R$ ${(entradas - saidas).toFixed(2)}`;
+        }
+
+        function abrirModalOS(id = null) {
+            document.getElementById('formOS').reset();
+            document.getElementById('osId').value = '';
+            document.getElementById('modalOSTitulo').innerText = 'Nova Ordem de Serviço';
+            if (id) {
+                const os = dbOS.find(o => o.id === id);
+                if (os) {
+                    document.getElementById('osId').value = os.id;
+                    document.getElementById('osCliente').value = os.cliente;
+                    document.getElementById('osTelefone').value = os.telefone;
+                    document.getElementById('osAparelho').value = os.aparelho;
+                    document.getElementById('osValor').value = os.valor;
+                    document.getElementById('osDefeito').value = os.defeito;
+                    document.getElementById('osStatus').value = os.status;
+                    document.getElementById('modalOSTitulo').innerText = 'Editar Ordem de Serviço';
                 }
-            });
-
-            document.getElementById('dash-os-abertas').innerText = osAbertas;
-            document.getElementById('dash-os-prontas').innerText = osProntas;
-            document.getElementById('dash-faturamento').innerText = `R$ ${faturamento.toFixed(2)}`;
-            document.getElementById('dash-estoque-baixo').innerText = estoqueBaixo;
-
-            // Tabela OS Recentes no Dashboard
-            const tbody = document.getElementById('tabela-os-recentes');
-            tbody.innerHTML = '';
-            const recentes = estadoApp.os.slice().reverse().slice(0, 5);
-
-            if (recentes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">Nenhuma OS recente.</td></tr>`;
-                return;
             }
-
-            recentes.forEach(os => {
-                const total = (parseFloat(os.pecas) || 0) + (parseFloat(os.mao) || 0);
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100">
-                        <td class="py-3 px-3 font-bold text-indigo-600">#${os.numeroOS}</td>
-                        <td class="py-3 px-3 font-medium text-slate-800">${os.cliente}</td>
-                        <td class="py-3 px-3 text-slate-600">${os.marca} ${os.modelo}</td>
-                        <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">${os.status}</span></td>
-                        <td class="py-3 px-3 text-right font-bold text-slate-800">R$ ${total.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
+            document.getElementById('modalOS').classList.remove('hidden');
         }
 
-        // ==================== OS LOGIC ====================
-        function renderizarTabelaOS() {
-            const busca = document.getElementById('filtro-busca-os').value.toLowerCase();
-            const statusFiltro = document.getElementById('filtro-status-os').value;
-            const tbody = document.getElementById('tabela-os-completa');
-            tbody.innerHTML = '';
-
-            const filtradas = estadoApp.os.filter(os => {
-                const matchBusca = os.cliente.toLowerCase().includes(busca) || os.modelo.toLowerCase().includes(busca) || os.numeroOS.toString().includes(busca);
-                const matchStatus = statusFiltro === 'todos' || os.status === statusFiltro;
-                return matchBusca && matchStatus;
-            });
-
-            if (filtradas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Nenhuma Ordem de Serviço encontrada.</td></tr>`;
-                return;
-            }
-
-            filtradas.slice().reverse().forEach(os => {
-                const total = (parseFloat(os.pecas) || 0) + (parseFloat(os.mao) || 0);
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100">
-                        <td class="py-3.5 px-4 font-bold text-indigo-600">#${os.numeroOS}</td>
-                        <td class="py-3.5 px-4">
-                            <div class="font-semibold text-slate-800">${os.cliente}</div>
-                            <div class="text-xs text-slate-400"><i class="fa-solid fa-phone text-[10px] mr-1"></i>${os.telefone}</div>
-                        </td>
-                        <td class="py-3.5 px-4">
-                            <div class="font-medium text-slate-700">${os.marca} ${os.modelo}</div>
-                            <div class="text-[11px] text-slate-400 font-mono">IMEI: ${os.imei || 'N/I'}</div>
-                        </td>
-                        <td class="py-3.5 px-4 max-w-xs truncate text-slate-600" title="${os.defeito}">${os.defeito}</td>
-                        <td class="py-3.5 px-4">
-                            <select onchange="atualizarStatusOS(${os.id}, this.value)" class="text-xs py-1 px-2 border rounded-lg bg-white font-medium focus:outline-none focus:border-indigo-500">
-                                <option value="Aberta" ${os.status==='Aberta'?'selected':''}>Aberta</option>
-                                <option value="Em Análise" ${os.status==='Em Análise'?'selected':''}>Em Análise</option>
-                                <option value="Aguardando Peça" ${os.status==='Aguardando Peça'?'selected':''}>Aguardando Peça</option>
-                                <option value="Em Reparo" ${os.status==='Em Reparo'?'selected':''}>Em Reparo</option>
-                                <option value="Pronto" ${os.status==='Pronto'?'selected':''}>Pronto</option>
-                                <option value="Entregue" ${os.status==='Entregue'?'selected':''}>Entregue</option>
-                                <option value="Cancelado" ${os.status==='Cancelado'?'selected':''}>Cancelado</option>
-                            </select>
-                        </td>
-                        <td class="py-3.5 px-4 text-right font-bold text-slate-800">R$ ${total.toFixed(2)}</td>
-                        <td class="py-3.5 px-4 text-center space-x-2">
-                            <button onclick="abrirModalWhatsappOS(${os.id})" class="text-emerald-600 hover:text-emerald-800 p-1.5 bg-emerald-50 rounded-lg" title="Enviar WhatsApp"><i class="fa-brands fa-whatsapp text-base"></i></button>
-                            <button onclick="window.deleteOS(${os.id})" class="text-rose-500 hover:text-rose-700 p-1.5 bg-rose-50 rounded-lg" title="Excluir OS"><i class="fa-solid fa-trash text-sm"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function abrirModalNovaOS() {
-            document.getElementById('modal-nova-os').classList.remove('hidden');
-        }
-
-        function fecharModalNovaOS() {
-            document.getElementById('modal-nova-os').classList.add('hidden');
-            document.getElementById('form-nova-os').reset();
-        }
-
-        function salvarOS(event) {
-            event.preventDefault();
-            const cliente = document.getElementById('os-cliente').value;
-            const telefone = document.getElementById('os-telefone').value;
-            const marca = document.getElementById('os-marca').value;
-            const modelo = document.getElementById('os-modelo').value;
-            const imei = document.getElementById('os-imei').value;
-            const senha = document.getElementById('os-senha').value;
-            const pecas = parseFloat(document.getElementById('os-pecas').value) || 0;
-            const mao = parseFloat(document.getElementById('os-mao').value) || 0;
-            const defeito = document.getElementById('os-defeito').value;
-            const formaPgto = document.getElementById('os-forma-pgto').value;
-
-            const novaOS = {
-                id: Date.now(),
-                numeroOS: estadoApp.proximoOS++,
-                cliente, telefone, marca, modelo, imei, senha, pecas, mao, defeito,
-                status: 'Aberta',
-                data: new Date().toLocaleDateString('pt-BR')
+        async function salvarOS(e) {
+            e.preventDefault();
+            const id = document.getElementById('osId').value;
+            const dados = {
+                cliente: document.getElementById('osCliente').value,
+                telefone: document.getElementById('osTelefone').value,
+                aparelho: document.getElementById('osAparelho').value,
+                valor: parseFloat(document.getElementById('osValor').value),
+                defeito: document.getElementById('osDefeito').value,
+                status: document.getElementById('osStatus').value
             };
-
-            estadoApp.os.push(novaOS);
-
-            // Se valor total > 0 e forma de pagamento for paga, lança no financeiro
-            const total = pecas + mao;
-            if (total > 0 && formaPgto !== 'A Receber') {
-                estadoApp.financeiro.push({
-                    id: Date.now() + 1,
-                    tipo: 'receita',
-                    origem: `OS #${novaOS.numeroOS} - ${cliente}`,
-                    valor: total,
-                    forma: formaPgto,
-                    data: new Date().toLocaleDateString('pt-BR')
-                });
-            }
-
-            atualizarTudo();
-            fecharModalNovaOS();
+            try {
+                if (id) await db.collection('os').doc(id).update(dados);
+                else await db.collection('os').add(dados);
+                fecharModal('modalOS');
+            } catch (err) { alert("Erro ao salvar OS."); }
         }
 
-        function atualizarStatusOS(id, novoStatus) {
-            const os = estadoApp.os.find(o => o.id === id);
-            if (os) {
-                os.status = novoStatus;
-                atualizarTudo();
-            }
-        }
-
-        window.deleteOS = function(id) {
-            window.abrirModalConfirmacao('Deseja realmente excluir esta Ordem de Serviço?', function() {
-                estadoApp.os = estadoApp.os.filter(o => o.id !== id);
-                atualizarTudo();
-            });
-        };
-
-        // ==================== WHATSAPP AUTOMATION ====================
-        function abrirModalWhatsappOS(id) {
-            const os = estadoApp.os.find(o => o.id === id);
-            if (!os) return;
-
-            const total = (os.pecas || 0) + (os.mao || 0);
-            let texto = `Olá, *${os.cliente}*! Passando para atualizar sobre a OS *#${os.numeroOS}* (${os.marca} ${os.modelo}).\n\nStatus atual: *${os.status}*.\nValor total estimado: *R$ ${total.toFixed(2)}*.\n\nQualquer dúvida, estamos à disposição na TEMPO TECH! 📱✨`;
-
-            document.getElementById('zap-cliente').value = `${os.cliente} (${os.telefone})`;
-            document.getElementById('zap-texto').value = texto;
-
-            const telefoneLimpo = os.telefone.replace(/\D/g, '');
-            const urlZap = `https://api.whatsapp.com/send?phone=55${telefoneLimpo}&text=${encodeURIComponent(texto)}`;
-            document.getElementById('btn-enviar-zap').href = urlZap;
-
-            document.getElementById('modal-whatsapp').classList.remove('hidden');
-        }
-
-        function fecharModalWhatsapp() {
-            document.getElementById('modal-whatsapp').classList.add('hidden');
-        }
-
-        // ==================== ESTOQUE LOGIC ====================
-        function renderizarEstoque() {
-            const busca = document.getElementById('filtro-busca-estoque').value.toLowerCase();
-            const tbody = document.getElementById('tabela-estoque');
+        function renderizarOS() {
+            const filtro = document.getElementById('filtroOS').value.toLowerCase();
+            const statusFiltro = document.getElementById('statusFiltroOS').value;
+            const tbody = document.getElementById('tabelaOS');
             tbody.innerHTML = '';
 
-            const filtradas = estadoApp.estoque.filter(p => p.nome.toLowerCase().includes(busca) || p.sku.toLowerCase().includes(busca));
+            const filtrados = dbOS.filter(os => {
+                const matchTexto = (os.cliente && os.cliente.toLowerCase().includes(filtro)) || (os.aparelho && os.aparelho.toLowerCase().includes(filtro));
+                const matchStatus = statusFiltro ? os.status === statusFiltro : true;
+                return matchTexto && matchStatus;
+            });
 
-            if (filtradas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Nenhum item cadastrado no estoque.</td></tr>`;
+            if (filtrados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-500">Nenhuma OS encontrada.</td></tr>`;
                 return;
             }
 
-            filtradas.forEach(p => {
-                const baixo = p.qtd <= p.min;
+            filtrados.forEach(os => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100">
-                        <td class="py-3.5 px-4">
-                            <div class="font-semibold text-slate-800">${p.nome}</div>
-                            <div class="text-xs text-slate-400 font-mono">SKU: ${p.sku || 'N/A'}</div>
-                        </td>
-                        <td class="py-3.5 px-4 text-slate-600">${p.categoria}</td>
-                        <td class="py-3.5 px-4 text-slate-600">R$ ${p.custo.toFixed(2)}</td>
-                        <td class="py-3.5 px-4 font-semibold text-emerald-600">R$ ${p.venda.toFixed(2)}</td>
-                        <td class="py-3.5 px-4 font-bold ${baixo ? 'text-rose-600' : 'text-slate-800'}">${p.qtd} un</td>
-                        <td class="py-3.5 px-4 text-center">
-                            ${baixo ? '<span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded-full text-xs font-bold">Estoque Baixo</span>' : '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold">Normal</span>'}
-                        </td>
-                        <td class="py-3.5 px-4 text-center">
-                            <button onclick="window.deleteItemEstoque(${p.id})" class="text-rose-500 hover:text-rose-700 p-1.5 bg-rose-50 rounded-lg" title="Excluir Peça"><i class="fa-solid fa-trash text-sm"></i></button>
+                    <tr class="hover:bg-slate-950/30 transition">
+                        <td class="p-4 font-mono text-xs text-slate-400">#${os.id.substring(0, 6)}</td>
+                        <td class="p-4 font-medium text-white">${os.cliente}</td>
+                        <td class="p-4 text-slate-300">${os.aparelho}</td>
+                        <td class="p-4 text-slate-400 truncate max-w-xs">${os.defeito}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-white">${os.status}</span></td>
+                        <td class="p-4 font-medium text-emerald-400">R$ ${(Number(os.valor) || 0).toFixed(2)}</td>
+                        <td class="p-4 text-right space-x-2">
+                            <button onclick="abrirModalOS('${os.id}')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="excluirItem('os', '${os.id}')" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
         }
 
-        function abrirModalNovaPeca() {
-            document.getElementById('modal-nova-peca').classList.remove('hidden');
-        }
-
-        function fecharModalNovaPeca() {
-            document.getElementById('modal-nova-peca').classList.add('hidden');
-            document.getElementById('form-nova-peca').reset();
-        }
-
-        function salvarPeca(event) {
-            event.preventDefault();
-            const nome = document.getElementById('peca-nome').value;
-            const sku = document.getElementById('peca-sku').value;
-            const categoria = document.getElementById('peca-categoria').value;
-            const custo = parseFloat(document.getElementById('peca-custo').value) || 0;
-            const venda = parseFloat(document.getElementById('peca-venda').value) || 0;
-            const qtd = parseInt(document.getElementById('peca-qtd').value) || 0;
-            const min = parseInt(document.getElementById('peca-min').value) || 0;
-
-            estadoApp.estoque.push({ id: Date.now(), nome, sku, categoria, custo, venda, qtd, min });
-
-            // Lança a despesa de compra no financeiro automaticamente
-            const totalCusto = custo * qtd;
-            if (totalCusto > 0) {
-                estadoApp.financeiro.push({
-                    id: Date.now() + 1,
-                    tipo: 'despesa',
-                    origem: `Compra Estoque: ${nome} (${qtd} un)`,
-                    valor: totalCusto,
-                    forma: 'Dinheiro',
-                    data: new Date().toLocaleDateString('pt-BR')
-                });
+        function abrirModalEstoque(id = null) {
+            document.getElementById('formEstoque').reset();
+            document.getElementById('estoqueId').value = '';
+            if (id) {
+                const item = dbEstoque.find(e => e.id === id);
+                if (item) {
+                    document.getElementById('estoqueId').value = item.id;
+                    document.getElementById('estNome').value = item.nome;
+                    document.getElementById('estCategoria').value = item.categoria;
+                    document.getElementById('estQtd').value = item.qtd;
+                    document.getElementById('estPreco').value = item.preco;
+                }
             }
-
-            atualizarTudo();
-            fecharModalNovaPeca();
+            document.getElementById('modalEstoque').classList.remove('hidden');
         }
 
-        window.deleteItemEstoque = function(id) {
-            window.abrirModalConfirmacao('Deseja excluir esta peça do estoque?', function() {
-                estadoApp.estoque = estadoApp.estoque.filter(p => p.id !== id);
-                atualizarTudo();
-            });
-        };
+        async function salvarEstoque(e) {
+            e.preventDefault();
+            const id = document.getElementById('estoqueId').value;
+            const dados = {
+                nome: document.getElementById('estNome').value,
+                categoria: document.getElementById('estCategoria').value,
+                qtd: parseInt(document.getElementById('estQtd').value),
+                preco: parseFloat(document.getElementById('estPreco').value)
+            };
+            try {
+                if (id) await db.collection('estoque').doc(id).update(dados);
+                else await db.collection('estoque').add(dados);
+                fecharModal('modalEstoque');
+            } catch (err) { alert("Erro ao salvar peça."); }
+        }
 
-        // ==================== FINANCEIRO LOGIC ====================
-        function renderizarFinanceiro() {
-            let totalReceitas = 0;
-            let totalDespesas = 0;
-            const tbody = document.getElementById('tabela-financeiro');
+        function renderizarEstoque() {
+            const filtro = document.getElementById('filtroEstoque').value.toLowerCase();
+            const tbody = document.getElementById('tabelaEstoque');
             tbody.innerHTML = '';
-
-            estadoApp.financeiro.slice().reverse().forEach(f => {
-                if (f.tipo === 'receita') totalReceitas += f.valor;
-                else totalDespesas += f.valor;
-
+            const filtrados = dbEstoque.filter(e => e.nome.toLowerCase().includes(filtro));
+            if (filtrados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Nenhuma peça no estoque.</td></tr>`;
+                return;
+            }
+            filtrados.forEach(item => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100">
-                        <td class="py-3.5 px-4 text-slate-500 text-xs">${f.data}</td>
-                        <td class="py-3.5 px-4">
-                            ${f.tipo === 'receita' ? '<span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold">Receita</span>' : '<span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded-full text-xs font-semibold">Despesa</span>'}
-                        </td>
-                        <td class="py-3.5 px-4 font-medium text-slate-800">${f.origem}</td>
-                        <td class="py-3.5 px-4 text-slate-600">${f.forma}</td>
-                        <td class="py-3.5 px-4 text-right font-bold ${f.tipo === 'receita' ? 'text-emerald-600' : 'text-rose-600'}">
-                            ${f.tipo === 'receita' ? '+' : '-'} R$ ${f.valor.toFixed(2)}
-                        </td>
-                        <td class="py-3.5 px-4 text-center">
-                            <button onclick="window.deleteFinanceiro(${f.id})" class="text-rose-500 hover:text-rose-700 p-1.5 bg-rose-50 rounded-lg" title="Excluir Lançamento"><i class="fa-solid fa-trash text-sm"></i></button>
+                    <tr class="hover:bg-slate-950/30 transition">
+                        <td class="p-4 font-medium text-white">${item.nome}</td>
+                        <td class="p-4 text-slate-400">${item.categoria}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-lg bg-slate-800 text-white font-mono text-xs">${item.qtd} un</span></td>
+                        <td class="p-4 font-medium text-emerald-400">R$ ${(Number(item.preco) || 0).toFixed(2)}</td>
+                        <td class="p-4 text-right space-x-2">
+                            <button onclick="abrirModalEstoque('${item.id}')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="excluirItem('estoque', '${item.id}')" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
-
-            const saldo = totalReceitas - totalDespesas;
-            document.getElementById('fin-total-receitas').innerText = `R$ ${totalReceitas.toFixed(2)}`;
-            document.getElementById('fin-total-despesas').innerText = `R$ ${totalDespesas.toFixed(2)}`;
-            const elSaldo = document.getElementById('fin-saldo-caixa');
-            elSaldo.innerText = `R$ ${saldo.toFixed(2)}`;
-            elSaldo.className = `text-2xl font-extrabold mt-1 ${saldo >= 0 ? 'text-indigo-900' : 'text-rose-600'}`;
         }
 
-        function abrirModalNovaDespesa() {
-            document.getElementById('modal-nova-despesa').classList.remove('hidden');
+        function abrirModalFinanceiro() {
+            document.getElementById('formFinanceiro').reset();
+            document.getElementById('finData').valueAsDate = new Date();
+            document.getElementById('modalFinanceiro').classList.remove('hidden');
         }
 
-        function fecharModalNovaDespesa() {
-            document.getElementById('modal-nova-despesa').classList.add('hidden');
-            document.getElementById('form-novo-lancamento').reset();
+        async function salvarFinanceiro(e) {
+            e.preventDefault();
+            const dados = {
+                descricao: document.getElementById('finDescricao').value,
+                tipo: document.getElementById('finTipo').value,
+                valor: parseFloat(document.getElementById('finValor').value),
+                data: document.getElementById('finData').value
+            };
+            try {
+                await db.collection('financeiro').add(dados);
+                fecharModal('modalFinanceiro');
+            } catch (err) { alert("Erro ao salvar lançamento."); }
         }
 
-        function salvarLancamento(event) {
-            event.preventDefault();
-            const tipo = document.getElementById('fin-tipo').value;
-            const valor = parseFloat(document.getElementById('fin-valor').value) || 0;
-            const origem = document.getElementById('fin-origem').value;
-            const forma = document.getElementById('fin-forma').value;
-
-            estadoApp.financeiro.push({
-                id: Date.now(),
-                tipo, origem, valor, forma,
-                data: new Date().toLocaleDateString('pt-BR')
-            });
-
-            atualizarTudo();
-            fecharModalNovaDespesa();
-        }
-
-        window.deleteFinanceiro = function(id) {
-            window.abrirModalConfirmacao('Deseja realmente apagar este lançamento do caixa?', function() {
-                estadoApp.financeiro = estadoApp.financeiro.filter(f => f.id !== id);
-                atualizarTudo();
-            });
-        };
-
-        // ==================== CUSTOM MODAL CONFIRMATION ====================
-        let acaoConfirmacaoGlobal = null;
-
-        window.abrirModalConfirmacao = function(mensagem, callback) {
-            acaoConfirmacaoGlobal = callback;
-            document.getElementById('texto-confirmacao').innerText = mensagem;
-            document.getElementById('modal-confirmacao').classList.remove('hidden');
-        };
-
-        window.fecharModalConfirmacao = function() {
-            acaoConfirmacaoGlobal = null;
-            document.getElementById('modal-confirmacao').classList.add('hidden');
-        };
-
-        window.executarConfirmacao = function() {
-            if (typeof acaoConfirmacaoGlobal === 'function') {
-                acaoConfirmacaoGlobal();
+        function renderizarFinanceiro() {
+            const tbody = document.getElementById('tabelaFinanceiro');
+            tbody.innerHTML = '';
+            let entradas = 0, saidas = 0;
+            if (dbFinanceiro.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Nenhum lançamento.</td></tr>`;
             }
-            window.fecharModalConfirmacao();
-        };
+            dbFinanceiro.forEach(f => {
+                if (f.tipo === 'Entrada') entradas += Number(f.valor || 0);
+                else saidas += Number(f.valor || 0);
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-950/30 transition">
+                        <td class="p-4 font-mono text-xs text-slate-400">${f.data}</td>
+                        <td class="p-4 font-medium text-white">${f.descricao}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-white">${f.tipo}</span></td>
+                        <td class="p-4 font-medium ${f.tipo === 'Entrada' ? 'text-emerald-400' : 'text-rose-400'}">R$ ${(Number(f.valor) || 0).toFixed(2)}</td>
+                        <td class="p-4 text-right"><button onclick="excluirItem('financeiro', '${f.id}')" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+            document.getElementById('fin-entradas').innerText = `R$ ${entradas.toFixed(2)}`;
+            document.getElementById('fin-saidas').innerText = `R$ ${saidas.toFixed(2)}`;
+            document.getElementById('fin-saldo').innerText = `R$ ${(entradas - saidas).toFixed(2)}`;
+        }
+
+        function abrirModalUsuario() {
+            document.getElementById('formUsuario').reset();
+            document.getElementById('modalUsuario').classList.remove('hidden');
+        }
+
+        async function salvarUsuario(e) {
+            e.preventDefault();
+            const dados = {
+                nome: document.getElementById('usrNome').value,
+                login: document.getElementById('usrLogin').value,
+                senha: document.getElementById('usrSenha').value,
+                cargo: document.getElementById('usrCargo').value
+            };
+            try {
+                await db.collection('usuarios').add(dados);
+                fecharModal('modalUsuario');
+            } catch(err) { alert("Erro ao salvar usuário."); }
+        }
+
+        function renderizarUsuarios() {
+            const tbody = document.getElementById('tabelaUsuarios');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            dbUsuarios.forEach(u => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-950/30 transition">
+                        <td class="p-4 font-medium text-white">${u.nome}</td>
+                        <td class="p-4 text-slate-400 font-mono text-xs">${u.login}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-white">${u.cargo}</span></td>
+                        <td class="p-4 text-right">${u.login !== 'admin' ? `<button onclick="excluirItem('usuarios', '${u.id}')" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>` : ''}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function excluirItem(colecao, id) {
+            if(confirm("Deseja realmente excluir este item?")) {
+                try {
+                    await db.collection(colecao).doc(id).delete();
+                } catch(err) { alert("Erro ao excluir."); }
+            }
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
     </script>
 </body>
 </html>
